@@ -7,24 +7,6 @@ Created on Fri Dec  3 14:16:49 2021
 """
 
 import pandas as pd
-import numpy as np
-import json
-import glob
-import os
-import geopandas as gpd
-from dask import dataframe as dd
-import dask_geopandas
-from shapely import wkt
-import time
-
-from pyinaturalist import (
-    Taxon,
-    enable_logging,
-    get_taxa,
-    get_taxa_autocomplete,
-    get_taxa_by_id,
-    pprint,
-)
 
 pd.set_option('display.max_columns', None)
 # pd.set_option('display.max_rows', None)
