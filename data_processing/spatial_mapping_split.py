@@ -89,6 +89,14 @@ for i in range(50000000, 220000000, 10000000):
 
     del rights, j
 
+    # REMOVE "<NA>" VALUES FROM UNIQUE_ID COLUMN
+
+    # df['unique_id'].apply(lambda x: print(x) if ('<NA>' in x) else x)
+
+    # df["unique_id"] = df["unique_id"].apply(
+    #     lambda x: x[x != "<NA>"] if ("<NA>" in x) else x
+    # )
+
     # rename species column to scientific_name
     total_merge = total_merge.rename(columns={"species": "scientific_name"})
 
