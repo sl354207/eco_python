@@ -17,11 +17,12 @@ for i in range(50000000, 220000000, 10000000):
     # read in cleaned parquet
     # df_path = string with variable i in it
 
-    df_path = f"/media/muskrat/T7 Shield/eco_data/v2/data_processing/step_0_optional/split_{i}.parquet"
+    # UPDATE FILE PATH
+    df_path = f"/PATH/split_{i}.parquet"
 
     df = dd.read_parquet(df_path)
 
-    map_path = "/media/muskrat/T7 Shield/eco_data/ecomap_final/eco_map.geojson"
+    map_path = "/PATH/ecomap_final/eco_map.geojson"
 
     map = gpd.read_file(map_path)
 
@@ -115,7 +116,9 @@ for i in range(50000000, 220000000, 10000000):
     ]
 
     # read cleaned df into a parquet file where user can input the file path
-    df_spatial_path = f"/media/muskrat/T7 Shield/eco_data/v2/data_processing/step_1/gbif_occurences/occurences_1.{i + 10000000}.parquet"
+
+    # UPDATE FILE PATH
+    df_spatial_path = f"/PATH/data_processing/step_1/gbif_occurences/occurences_1.{i + 10000000}.parquet"
 
     # write df to parquet file using pandas to_parquet
     total_merge.to_parquet(df_spatial_path)

@@ -20,7 +20,8 @@ df = pd.read_parquet(df_path)
 
 for i in range(0, len(df), 100000):
     df_new = df.iloc[i : i + 100000]
-    df_path = f"/media/muskrat/T7 Shield/eco_data/v2/data_final/species_v2.0_json/species_v2.0_{i}.json"
+    # UPDATE FILE PATH
+    df_path = f"/PATH/species_v2.0_{i}.json"
     df_new.to_json(df_path, orient="records", force_ascii=False)
 
 # %%
