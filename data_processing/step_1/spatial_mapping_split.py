@@ -98,6 +98,8 @@ for i in range(50000000, 220000000, 10000000):
     #     lambda x: x[x != "<NA>"] if ("<NA>" in x) else x
     # )
 
+    # REMOVE ROWS WHERE UNIQUE_ID IS AN EMPTY ARRAY
+
     # rename species column to scientific_name
     total_merge = total_merge.rename(columns={"species": "scientific_name"})
 
