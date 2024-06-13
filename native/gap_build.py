@@ -27,7 +27,7 @@ warnings.filterwarnings("ignore", message=".*initial implementation of Parquet.*
 
 file_list = []
 # 500 1000 1500 1719
-for i in range(0, 10, 1):
+for i in range(0, 1719, 1):
     #  list the files inside directory {i}
     for file_path in os.listdir(
         f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/unzipped/{i}"
@@ -45,7 +45,8 @@ file_list = list(dict.fromkeys(file_list))
 meta_df = pd.DataFrame()
 name_df = pd.DataFrame()
 geo_df = pd.DataFrame()
-for i in range(0, 10, 1):
+for i in range(0, 1719, 1):
+
     print(i)
     tree = ET.parse(
         f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/unzipped/{i}/{file_list[i]}.xml"
@@ -79,6 +80,8 @@ for i in range(0, 10, 1):
                 metadata = pd.read_csv(zObject.open(j))
                 metadata["join"] = i
                 meta_df = pd.concat([meta_df, metadata])
+                meta_df = meta_df.drop(columns="strHUC12RNG")
+                meta_df = meta_df.drop_duplicates()
                 break
 
     # print(name)
@@ -98,42 +101,27 @@ for i in range(0, 10, 1):
     # merge meta_df, name_df, and geo_df on join column
 
     df = pd.merge(meta_df, name_df, on="join")
+
     df = pd.merge(df, geo_df, on="join")
 
-    df = df.drop(columns=["strHUC12RNG", "join"])
+    df = df.drop(columns="join")
 
     # %%
     df = gpd.GeoDataFrame(df, geometry="geometry")
     # %%
-
-    step = 1000
-    step_end = len(df)
-
-    if len(df) > step:
-        sub_df = pd.DataFrame()
-        for k in range(0, len(df), step):
-            print(k)
-            if k + step < step_end:
-                sub = df.iloc[k : k + step]
-                sub = sub.drop_duplicates()
-                sub_df = pd.concat([sub_df, sub])
-            else:
-                sub = df.iloc[k:]
-                sub = sub.drop_duplicates()
-                sub_df = pd.concat([sub_df, sub])
-                break
-
-        sub_df = sub_df.drop_duplicates()
-        sub_df.to_parquet(
+step = 500
+step_end = len(df)
+for i in range(0, len(df), step):
+    # split df into chunks of size 1000
+    if i + step < step_end:
+        sub = df.iloc[i : i + step]
+        sub.to_parquet(
             f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/init/{i}.parquet"
         )
-
-        del sub_df
-
     else:
-        df = df.drop_duplicates()
-        df.to_parquet(
+        sub = df.iloc[i:]
+        sub.to_parquet(
             f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/init/{i}.parquet"
         )
 
-        del df
+        break
