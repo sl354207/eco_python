@@ -9,7 +9,7 @@ metadata = pd.read_csv(
 )
 # %%
 # restart from error row if necessary
-row = metadata[metadata["SHP/*"] == "aescparv"].index[0]
+row = metadata[metadata["SHP/*"] == "querilic"].index[0]
 
 metadata = metadata.iloc[row:, :]
 # %%
@@ -103,8 +103,11 @@ for shp in metadata["SHP/*"]:
                     > 0.1
                 ].index.tolist()
 
-    # convert to df
-    native_df = eco_map[eco_map["unique_id"].isin(native)]
+                if len(native) == 0:
+                    native = ["check"]
+
+    # # convert to df
+    # native_df = eco_map[eco_map["unique_id"].isin(native)]
 
     # scientific_name equals the Latin Name in metadata at value of SHP/*
     scientific_name = metadata.loc[metadata["SHP/*"] == shp]["Latin Name"].values[0]
