@@ -9,9 +9,9 @@ metadata = pd.read_csv(
 )
 # %%
 # restart from error row if necessary
-row = metadata[metadata["SHP/*"] == "querilic"].index[0]
+# row = metadata[metadata["SHP/*"] == "querilic"].index[0]
 
-metadata = metadata.iloc[row:, :]
+# metadata = metadata.iloc[row:, :]
 # %%
 # create new dataframe with latin names, common names, and shp/* columns from metadata
 
@@ -106,9 +106,6 @@ for shp in metadata["SHP/*"]:
                 if len(native) == 0:
                     native = ["check"]
 
-    # # convert to df
-    # native_df = eco_map[eco_map["unique_id"].isin(native)]
-
     # scientific_name equals the Latin Name in metadata at value of SHP/*
     scientific_name = metadata.loc[metadata["SHP/*"] == shp]["Latin Name"].values[0]
 
@@ -119,7 +116,6 @@ for shp in metadata["SHP/*"]:
             "scientific_name": scientific_name,
             "common_name": common_name,
             "unique_id": native,
-            "database": "little",
         },
     )
 

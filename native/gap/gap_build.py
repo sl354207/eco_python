@@ -29,9 +29,7 @@ file_list = []
 # 500 1000 1500 1719
 for i in range(0, 1719, 1):
     #  list the files inside directory {i}
-    for file_path in os.listdir(
-        f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/unzipped/{i}"
-    ):
+    for file_path in os.listdir(f"/UPDATE_PATH/GAP/unzipped/{i}"):
         # print(file_path)
         # store each file path before extension in a list
 
@@ -48,9 +46,7 @@ geo_df = pd.DataFrame()
 for i in range(0, 1719, 1):
 
     print(i)
-    tree = ET.parse(
-        f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/unzipped/{i}/{file_list[i]}.xml"
-    )
+    tree = ET.parse(f"/UPDATE_PATH/GAP/unzipped/{i}/{file_list[i]}.xml")
     root = tree.getroot()
 
     name = ""
@@ -70,7 +66,7 @@ for i in range(0, 1719, 1):
             break
         else:
             print("no title")
-    zip = f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/unzipped/{i}/{file_list[i]}.zip"
+    zip = f"/UPDATE_PATH/GAP/unzipped/{i}/{file_list[i]}.zip"
     with ZipFile(zip, "r") as zObject:
         # print(zObject.namelist())
         # open file in zObject that ends in .csv and save to dataframe
@@ -115,13 +111,9 @@ for i in range(0, len(df), step):
     # split df into chunks of size 1000
     if i + step < step_end:
         sub = df.iloc[i : i + step]
-        sub.to_parquet(
-            f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/init/{i}.parquet"
-        )
+        sub.to_parquet(f"/UPDATE_PATH/GAP/init/{i}.parquet")
     else:
         sub = df.iloc[i:]
-        sub.to_parquet(
-            f"/media/muskrat/T7 Shield/eco_data/v3/native/GAP/init/{i}.parquet"
-        )
+        sub.to_parquet(f"/UPDATE_PATH/GAP/init/{i}.parquet")
 
         break
