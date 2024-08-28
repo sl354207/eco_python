@@ -72,8 +72,8 @@ unique_species.sort()
 # %%
 
 # PLANTS 5206
-for i in range(1500, 2000, 1):
-    # for i in range(4500, len(unique_species), 1):
+# for i in range(4000, 4500, 1):
+for i in range(4500, len(unique_species), 1):
     species = unique_species[i]
     # for species in unique_species:
     species_df = df[df["sci_name"] == species]
