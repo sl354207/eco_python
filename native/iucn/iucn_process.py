@@ -71,9 +71,9 @@ print(len(unique_species))
 unique_species.sort()
 # %%
 
-# FW_FISH - 6805
-for i in range(1000, 1500, 1):
-    # for i in range(4500, len(unique_species), 1):
+# REPTILES_2 - 4907
+# for i in range(4000, 4500, 1):
+for i in range(4500, len(unique_species), 1):
     species = unique_species[i]
     # for species in unique_species:
     species_df = df[df["sci_name"] == species]
