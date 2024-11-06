@@ -42,13 +42,13 @@ for file in files:
 
     # convert column coordinateUncertaintyInMeters to float
     df["coordinateUncertaintyInMeters"] = df["coordinateUncertaintyInMeters"].astype(
-        "float64"
+        "float32"
     )
 
-    df["year"] = df["year"].astype("int64")
+    df["year"] = df["year"].astype("int32")
 
-    df["decimalLatitude"] = df["decimalLatitude"].astype("float64")
-    df["decimalLongitude"] = df["decimalLongitude"].astype("float64")
+    df["decimalLatitude"] = df["decimalLatitude"].astype("float32")
+    df["decimalLongitude"] = df["decimalLongitude"].astype("float32")
 
     max_uncertainty_in_meters = df["coordinateUncertaintyInMeters"].max()
     min_uncertainty_in_meters = df["coordinateUncertaintyInMeters"].min()

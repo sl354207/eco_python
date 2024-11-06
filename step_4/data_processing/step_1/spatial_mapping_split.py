@@ -1,5 +1,5 @@
 # 400 meter coordinate accuracy
-# 1923 earliest year
+# 1924 earliest year
 import pandas as pd
 import geopandas as gpd
 from dask import dataframe as dd
