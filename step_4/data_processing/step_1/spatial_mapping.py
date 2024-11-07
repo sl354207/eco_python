@@ -1,8 +1,11 @@
+# %%
 # 400 meter coordinate accuracy
 # 1924 earliest year
 import pandas as pd
 import geopandas as gpd
 import os
+
+os.environ["PROJ_LIB"] = "/home/muskrat/miniconda3/envs/eco/share/proj"
 
 # from dask import dataframe as dd
 
@@ -45,53 +48,56 @@ for file in files:
     df = df.set_crs("EPSG:4326")
 
     df = df.drop(["decimalLatitude", "decimalLongitude"], axis=1)
+    # print(df.head())
 
     df = df.sjoin(map, predicate="within")
 
     # ECOREGIONS ONLY, NO FRESHWATER OR SOIL
     # remove rows with <NA> in unique_id from df
-    df = df[df["unique_id"] != "<NA>"]
+    # df = df[df["unique_id"] != "<NA>"]
 
-    del map, map_path
+    # del map, map_path
 
-    df = df.drop(["index_right", "geometry", "name", "TYPE"], axis=1)
+    # ecoregions
+    # df = df.drop(["index_right", "geometry", "name", "TYPE"], axis=1)
 
     # freshwater
     # df = df.drop(["index_right", "geometry", "name", "rights"], axis=1)
 
     # soil
-    # df = df.drop(
-    #     [
-    #         "index_right",
-    #         "geometry",
-    #         "rights",
-    #         "dominant_soil_type_percentage",
-    #         "soil_texture",
-    #         "soil_slope",
-    #         "soil_id",
-    #         "FAOSOIL",
-    #     ],
-    #     axis=1,
-    # )
+    df = df.drop(
+        [
+            "index_right",
+            "geometry",
+            "rights",
+            "dominant_soil_type_percentage",
+            "soil_texture",
+            "soil_slope",
+            "soil_id",
+            "FAOSOIL",
+        ],
+        axis=1,
+    )
 
     # divider
 
-    unique_regions = (
-        df.groupby("species")
-        .apply(
-            lambda x: pd.Series(
-                {
-                    "unique_id": list(x["unique_id"].unique()),
-                    "rights": list(
-                        x[["unique_id", "rights"]].drop_duplicates(
-                            "unique_id", keep="first"
-                        )["rights"]
-                    ),
-                }
-            )
-        )
-        .reset_index()
-    )
+    # ecoregions
+    # unique_regions = (
+    #     df.groupby("species")
+    #     .apply(
+    #         lambda x: pd.Series(
+    #             {
+    #                 "unique_id": list(x["unique_id"].unique()),
+    #                 "rights": list(
+    #                     x[["unique_id", "rights"]].drop_duplicates(
+    #                         "unique_id", keep="first"
+    #                     )["rights"]
+    #                 ),
+    #             }
+    #         )
+    #     )
+    #     .reset_index()
+    # )
 
     # freshwater
     # unique_regions = (
@@ -107,34 +113,34 @@ for file in files:
     # )
 
     # soil
-    # unique_regions = (
-    #     df.groupby("species")
-    #     .apply(
-    #         lambda x: pd.Series(
-    #             {
-    #                 "id": list(x["id"]),
-    #                 "specific_soil_name": list(x["specific_soil_name"]),
-    #                 "dominant_soil_name": list(x["dominant_soil_name"]),
-    #             }
-    #         )
-    #     )
-    #     .reset_index()
-    # )
+    unique_regions = (
+        df.groupby("species")
+        .apply(
+            lambda x: pd.Series(
+                {
+                    "id": list(x["id"]),
+                    "specific_soil_name": list(x["specific_soil_name"]),
+                    "dominant_soil_name": list(x["dominant_soil_name"]),
+                }
+            )
+        )
+        .reset_index()
+    )
 
     # divider
 
     unique_species = df.drop_duplicates(subset=["species"])
 
     # ecoregions
-    unique_species = unique_species.drop(["unique_id", "rights"], axis=1)
+    # unique_species = unique_species.drop(["unique_id", "rights"], axis=1)
 
     # freshwater
     # unique_species = unique_species.drop(["id"], axis=1)
 
     # soil
-    # unique_species = unique_species.drop(
-    #     ["specific_soil_name", "dominant_soil_name", "id"], axis=1
-    # )
+    unique_species = unique_species.drop(
+        ["specific_soil_name", "dominant_soil_name", "id"], axis=1
+    )
 
     # divider
 
@@ -142,21 +148,24 @@ for file in files:
 
     # divider
 
-    df = df.rename(
-        columns={"species": "scientific_name", "unique_id": "observed_ecoregions"}
-    )
+    # ecoregions
+    # df = df.rename(
+    #     columns={"species": "scientific_name", "unique_id": "observed_ecoregions"}
+    # )
 
     # freshwater
-    # df = df.rename(columns={"species": "scientific_name", "id": "freshwater_ecoregions"})
+    # df = df.rename(
+    #     columns={"species": "scientific_name", "id": "freshwater_ecoregions"}
+    # )
 
     # soil
-    # df = df.rename(columns={"species": "scientific_name", "id": "soil_id"})
+    df = df.rename(columns={"species": "scientific_name", "id": "soil_id"})
 
     # divider
 
     # ECOREGIONS ONLY
     # remove None values from rights column
-    df["rights"] = df["rights"].apply(lambda x: [i for i in x if i is not None])
+    # df["rights"] = df["rights"].apply(lambda x: [i for i in x if i is not None])
 
     # divider
 
