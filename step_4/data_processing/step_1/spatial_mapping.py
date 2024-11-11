@@ -52,24 +52,27 @@ for file in files:
 
     df = df.sjoin(map, predicate="within")
 
-    # ECOREGIONS ONLY, NO FRESHWATER OR SOIL
+    # ecoregions
     # remove rows with <NA> in unique_id from df
     # df = df[df["unique_id"] != "<NA>"]
 
-    # del map, map_path
+    # freshwater
+    # df = df[df["id"] != "<NA>"]
+
+    # soil
+    df = df[df["id"] != "<NA>"]
 
     # ecoregions
     # df = df.drop(["index_right", "geometry", "name", "TYPE"], axis=1)
 
     # freshwater
-    # df = df.drop(["index_right", "geometry", "name", "rights"], axis=1)
+    # df = df.drop(["index_right", "geometry", "name"], axis=1)
 
     # soil
     df = df.drop(
         [
             "index_right",
             "geometry",
-            "rights",
             "dominant_soil_type_percentage",
             "soil_texture",
             "soil_slope",
@@ -82,69 +85,50 @@ for file in files:
     # divider
 
     # ecoregions
-    # unique_regions = (
-    #     df.groupby("species")
-    #     .apply(
-    #         lambda x: pd.Series(
-    #             {
-    #                 "unique_id": list(x["unique_id"].unique()),
-    #                 "rights": list(
-    #                     x[["unique_id", "rights"]].drop_duplicates(
-    #                         "unique_id", keep="first"
-    #                     )["rights"]
-    #                 ),
-    #             }
-    #         )
+    # df = df.groupby(
+    #     ["kingdom", "phylum", "class", "order", "family", "genus", "species"],
+    #     as_index=False,
+    #     dropna=False,
+    # ).apply(
+    #     lambda x: pd.Series(
+    #         {
+    #             "unique_id": list(x["unique_id"].unique()),
+    #             "rights": list(
+    #                 x[["unique_id", "rights"]].drop_duplicates(
+    #                     "unique_id", keep="first"
+    #                 )["rights"]
+    #             ),
+    #         }
     #     )
-    #     .reset_index()
     # )
 
     # freshwater
-    # unique_regions = (
-    #     df.groupby("species")
-    #     .apply(
-    #         lambda x: pd.Series(
-    #             {
-    #                 "id": list(x["id"].unique()),
-    #             }
-    #         )
+    # df = df.groupby(
+    #     ["kingdom", "phylum", "class", "order", "family", "genus", "species"],
+    #     as_index=False,
+    #     dropna=False,
+    # ).apply(
+    #     lambda x: pd.Series(
+    #         {
+    #             "id": list(x["id"].unique()),
+    #         }
     #     )
-    #     .reset_index()
     # )
 
     # soil
-    unique_regions = (
-        df.groupby("species")
-        .apply(
-            lambda x: pd.Series(
-                {
-                    "id": list(x["id"]),
-                    "specific_soil_name": list(x["specific_soil_name"]),
-                    "dominant_soil_name": list(x["dominant_soil_name"]),
-                }
-            )
+    df = df.groupby(
+        ["kingdom", "phylum", "class", "order", "family", "genus", "species"],
+        as_index=False,
+        dropna=False,
+    ).apply(
+        lambda x: pd.Series(
+            {
+                "id": list(x["id"]),
+                "specific_soil_name": list(x["specific_soil_name"]),
+                "dominant_soil_name": list(x["dominant_soil_name"]),
+            }
         )
-        .reset_index()
     )
-
-    # divider
-
-    unique_species = df.drop_duplicates(subset=["species"])
-
-    # ecoregions
-    # unique_species = unique_species.drop(["unique_id", "rights"], axis=1)
-
-    # freshwater
-    # unique_species = unique_species.drop(["id"], axis=1)
-
-    # soil
-    unique_species = unique_species.drop(
-        ["specific_soil_name", "dominant_soil_name", "id"], axis=1
-    )
-
-    # divider
-
-    df = pd.merge(unique_regions, unique_species, on="species", how="inner")
 
     # divider
 
@@ -160,12 +144,6 @@ for file in files:
 
     # soil
     df = df.rename(columns={"species": "scientific_name", "id": "soil_id"})
-
-    # divider
-
-    # ECOREGIONS ONLY
-    # remove None values from rights column
-    # df["rights"] = df["rights"].apply(lambda x: [i for i in x if i is not None])
 
     # divider
 
