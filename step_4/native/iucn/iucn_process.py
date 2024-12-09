@@ -1,6 +1,10 @@
 import geopandas as gpd
 import pandas as pd
 
+import os
+
+os.environ["PROJ_LIB"] = "/home/muskrat/miniconda3/envs/eco/share/proj"
+
 # %%
 zip = input("Enter the zip file path: ")
 ecomap_loc = input("Enter the ecomap file path: ")
@@ -71,9 +75,9 @@ print(len(unique_species))
 unique_species.sort()
 # %%
 
-# AMPHIBIANS_2 - 3875
-for i in range(2500, 3000, 1):
-    # for i in range(4500, len(unique_species), 1):
+# FW_FISH_2 - 6889
+for i in range(1500, 2000, 1):
+    # for i in range(3500, len(unique_species), 1):
     species = unique_species[i]
     # for species in unique_species:
     species_df = df[df["sci_name"] == species]
